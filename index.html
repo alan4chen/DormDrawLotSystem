@@ -44,15 +44,15 @@ https://github.com/davidbau/seedrandom
     var data;
 
     var csvRequest = new Request({
-                    url:"https://raw.githubusercontent.com/alan4chen/DormDrawLotSystem/master/data.csv",
+                    url:'https://raw.githubusercontent.com/alan4chen/DormDrawLotSystem/master/data.csv',
                     onSuccess:function(response){
                         data = $.csv.toArrays(response);
                         for(var i = 0; i < data.length; i++) {
                             var arr = data[i];
-                            for(var j = 0; j < arr.length; j++) {
+                            for (var j = 0; j < arr.length; j++) {
                                 console.log(arr[j]);
                             }
-
+                        }
                         createTable(data);
                     }
                 }).send();
