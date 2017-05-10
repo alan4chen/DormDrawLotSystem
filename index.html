@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Random Drawer</title>
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="jquery-csv.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/mootools/1.2.4/mootools-yui-compressed.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
+
+
+</head>
+<br >
+
+<h3>2017暑假住宿抽籤</h3>
+
+<text>請輸入亂數種子:</text>
+<input name="randseed"> </input>
+<button onclick="draw()">提交</button>
+(例如，輸入今日台股收盤加權指數 "9968.32")
+
+<p>抽籤規則：依照亂數種子(random seed) 為每個學號生出各自的亂數
+<br /> 前5大亂數者中籤
+    <br /> "O"表示中籤
+</p>
+<br />
+
+
+
+<table id="mytable">
+</table>
+
+<p5>
+    <br />--<br />
+關於javascript的seed random請參考:</br>
+https://github.com/davidbau/seedrandom
+</p5>
+
+</body>
+
+<script type="text/javascript">
+
+    var data;
+
+    var csvRequest = new Request({
+                    url:"test.csv",
+                    onSuccess:function(response){
+                        data = $.csv.toArrays(response);
+                        for(var i = 0; i < data.length; i++) {
+                            var arr = data[i];
+                            for(var j = 0; j < arr.length; j++) {
+                                console.log(arr[j]);
+                            }
+                        }
+                        createTable(data);
+                    }
+                }).send();
+
+    function createTable(data) {
+        var table = document.getElementById('mytable');
+        var tableBody = document.createElement('tbody');
+        // title
+        var title_row = document.createElement('tr');
+        var id_cell = document.createElement('td');
+        id_cell.appendChild(document.createTextNode('學號'));
+        title_row.appendChild(id_cell);
+        var name_cell = document.createElement('td');
+        name_cell.appendChild(document.createTextNode('姓名'));
+        title_row.appendChild(name_cell);
+        var rand_cell = document.createElement('td');
+        rand_cell.appendChild(document.createTextNode('亂數'));
+        title_row.appendChild(rand_cell);
+        var zq_cell = document.createElement('td');
+        zq_cell.appendChild(document.createTextNode('中籤'));
+        title_row.appendChild(zq_cell);
+        tableBody.appendChild(title_row);
+
+
+      for(var i = 0; i < data.length; i++) {
+          var arr = data[i];
+          var row = document.createElement('tr');
+
+          var cell = document.createElement('td');
+          cell.id = i+'id';
+          cell.innerHTML = arr[0];
+          row.appendChild(cell);
+
+          cell = document.createElement('td');
+          cell.id = i+'name';
+          cell.innerHTML = arr[1];
+          row.appendChild(cell);
+
+          cell = document.createElement('td');
+          cell.id = i+'rd';
+          cell.innerHTML = 0;
+          row.appendChild(cell);
+
+          cell = document.createElement('td');
+          cell.id = i+'zq';
+          cell.innerHTML = '-';
+          row.appendChild(cell);
+
+          row.id = i;
+          tableBody.appendChild(row);
+      }
+      table.appendChild(tableBody);
+    }
+    
+    function draw() {
+        var seed = document.getElementsByName('randseed')[0].value;
+        console.log(seed);
+        var rng = new Math.seedrandom(seed);
+
+
+        var arr = [];
+        for(var i = 0; i < data.length; i++) {
+
+            var rd = rng();
+            var element = [i, rd];
+            arr.push(element);
+            document.getElementById(i+'rd').innerHTML = rd;
+        }
+
+        console.log(arr);
+        arr.sort(function(a, b) {
+            return b[1] - a[1];
+        });
+        console.log(arr);
+
+        for(var i = 0; i < data.length; i++) {
+            if(i < 5) {
+                document.getElementById(arr[i][0] + 'zq').innerHTML = 'O';
+            }else{
+                document.getElementById(arr[i][0] + 'zq').innerHTML = 'X';
+            }
+        }
+
+
+    }
+
+
+</script>
+
+</html>
