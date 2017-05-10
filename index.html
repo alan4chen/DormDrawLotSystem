@@ -44,7 +44,7 @@ https://github.com/davidbau/seedrandom
     var data;
 
     var csvRequest = new Request({
-                    url:'https://raw.githubusercontent.com/alan4chen/DormDrawLotSystem/master/data.csv',
+                    url:'data.csv',
                     onSuccess:function(response){
                         data = $.csv.toArrays(response);
                         for(var i = 0; i < data.length; i++) {
